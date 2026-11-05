@@ -24,8 +24,11 @@
     </div>
 
 	<h2>Model Equations and Boundary Conditions</h2>
-	solves boussinesq equations...
-
+	<h3>Dimensional</h3>
+	\[ \frac{\partial \zeta}{\partial t} + J(\psi,\zeta) = g\,\alpha\,\frac{\partial T}{\partial x} + \nu\,\nabla^2\zeta, \] \[ \frac{\partial T}{\partial t} + J(\psi,T) = \kappa\nabla^2 T, \] \[ \zeta = \nabla^2 \psi. \]
+	<h3>Non-Dimensional</h3>
+	\[ \frac{\partial \zeta}{\partial t} + J(\psi,\zeta) = Ra\,Pr\,\frac{\partial T}{\partial x} + Pr\,\nabla^2\zeta, \] \[ \frac{\partial T}{\partial t} + J(\psi,T) = \nabla^2 T, \] \[ \zeta = \nabla^2 \psi. \]
+	\[Ra = \frac{g\alpha\Delta TL^3}{\nu\kappa}\qquad Pr = \frac{\nu}{\kappa}\]
 	<h2>Numerical Methods</h2>
 	using numerical methods...
 
