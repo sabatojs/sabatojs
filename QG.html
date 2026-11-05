@@ -1,18 +1,75 @@
 <!DOCTYPE html><html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QG Model Simulations</title>
+    <title>QG Model</title>
 </head>
 <body>
 <link rel="stylesheet" href="styles.css">
 
-    <h1>Quasigeostrophic Model Simulations</h1>
+    <h1>3D Quasigeostrophic Model</h1>
+    <h2>Simulations</h2>
+    <div class="gif-container">
+        <p><h3>Life-cycle of baroclinically unstable waves in a channel</h3></p>
+	<img src="QGdemo.gif" width="800" height="400">
+       <!-- <img src="QGdemo.gif" alt="GIF IMAGE">-->
+    </div>
 
-    <ul>
-	<li><a href="QGdemo.html">Baroclinic Instability: 3D Quasi-geostrophic reentrant channel</a></li>
-    </ul>
+<!-- <ul>
+	<li><a href="QGdemo.html">Life-Cycle of Baroclinic Instability</a></li>
+    </ul>-->
 
+	<h2>Model Equations and Boundary Conditions</h2>
+	The model solves the quasigeostrophic psuedo-PV equation in a rectangular channel on the beta-plane
+
+	\[\frac{\partial q}{\partial t} + J(\psi,q) = \nu \nabla^2q + \dot{Q}\]
+
+	where 
+
+	\[q=\beta y + \nabla^2\psi + \frac{f^2}{N^2}\frac{\partial^2 \psi}{\partial z^2}\]
+
+	The Laplacian is \(\nabla^2 = \frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial y^2}\) and the 
+	Jacobian is defined by \(J(A,B) = \frac{\partial B}{\partial x}\frac{\partial A}{\partial y}-\frac{\partial A}{\partial x}\frac{\partial B}{\partial y}\).
+	The streamfunction is related to the zonal and meridional flow velocities by
+
+	\[(u,v) = \left (-\frac{1}{f_0}\frac{\partial \psi}{\partial y},\frac{1}{f_0}\frac{\partial \psi}{\partial x} \right )\]
+
+	The right-hand-side is the sum of artificial numerical diffusion (\(\nu\nabla^2q\)) and a source/sink of PV (\(\dot{Q}\)).
+	The horizontal boundary conditions are periodic at \(x=0, L\) (longitude) and rigid walls at \(y=\pm L/2\) (latitude).
+	The advection of potential temperature anomaly (\(\theta\)) at the surface (\(z=0\)) and "tropopause" (rigid lid, \(z=H\)) provides 
+	the vertical boundary condition since \(\theta = \frac{f_0\theta_0}{g}\frac{\partial \psi}{\partial z}\)
+	
+	\[\frac{\partial \theta}{\partial t} + J(\psi,\theta) = \nu\nabla^2\theta + \dot{H} \qquad z=0,H\]
+
+	The PV source/sink term and heating terms at the top and bottom boundaries allow for 
+	statistical equilibrium simulations.
+
+	<h2>Numerical Methods</h2>
+	All variables are calculated on an evenly spaced horizontal and vertical grid for \(x,y,z\). All fields are 
+	calculated at the center of the vertical level. The flow is decomposed into the zonal mean, time mean and the eddy components so 
+	that non-linear terms can be omitted.  Thus, the model can be used to find the most linearly unstable wave by similating a long 
+	time with non-linear terms set to zero.  
+
+	<h3>Operator Splitting</h3>
+	PV and surface/tropopause temperatures are calculated separately for each term.
+	<ul>
+		<li>PV and temperature advection is calculated using the Arakawa Jacobian. A leap-frog in time 
+	scheme is used, including a Robert filter to control the leap-frog computational mode.</li>
+
+		<li>PV is inverted for the stream function by FFT (sine/cosine-series in x, 
+			sine-series in y) and solving
+	\[\widehat{q}_{kl}= -(k^2+l^2)\widehat{\psi}_{kl} + \frac{f^2}{N^2}\frac{{d^2}\widehat{\psi}_{kl} }{d z^2}\]
+	\[\widehat{\theta}_{kl}=\frac{d\widehat{\psi}_{kl}}{dz} \qquad z=0,H\]
+
+	Using a finite difference approximation, the resulting tridiagonal system in z is solved for each Fourier mode.  The real stream 
+	function \(\psi(x,y,z)\)is then found by IFFT of \(\widehat{\psi}(z)_{kl}\). The PV source/sink terms, and the surface/tropopause heating terms are calculated along with the 
+	advection terms.</li>
+		<li>Numerical diffusion is calculated using the Crank-Nicholson, implicit in time method</li>
+<!--
+		 \[ f(x,y) = \sum_{m=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \widehat{f}_{mn}\, e^{i(k_m x + l_n y)} \]
+\[ f(x,y) = \sum_{m=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \left[ A_{mn}\cos\!\left(k_m x + l_n y\right) + B_{mn}\sin\!\left(k_m x + l_n y\right) \right] \]-->
+	</ul> 
 
 </body>
 </html>
