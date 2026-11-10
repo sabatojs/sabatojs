@@ -42,12 +42,15 @@
 	The \(P_l^m\) are the associated Legendre polynomials.  A triangular truncation (default T42) is used: \(|m| \le \ell \le N\).  The fields are
 	transformed from physical into spectral space using FFT and Gaussian quadrature to find the coefficients
 	\[ q_{\ell m} = \int_{-1}^{1} \int_{0}^{2\pi} q(\lambda,\mu)\, P_\ell^m(\mu)\, e^{-im\lambda} \,d\lambda\,d\mu. \]
-	and each harmonic is stepped forward in time. The model decomposes the depth into a mean and deviation, \(h=H+\eta\).
+	and each harmonic is stepped forward in time. 
+	Non-linear terms are multiplied in physical space before the forward 
+	transform.  
+
+	The model decomposes the depth into a mean and deviation, \(h=H+\eta\).
 	The mean component (terms proportional to \(H\)) is stepped forward with an
 	implicit-in-time scheme to control the gravity waves. Once the spectral
 	harmonics are updated, they are transformed back to physical space.  
-	Non-linear terms are multiplied in physical space before the forward 
-	transform.  A \(4^{\text{th}}\) order hyper-diffusion (\(\propto\nabla^4\)) 
+A \(4^{\text{th}}\) order hyper-diffusion (\(\propto\nabla^4\)) 
 	is used to control small scale noise.
 
 </body>
