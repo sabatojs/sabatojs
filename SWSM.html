@@ -16,10 +16,39 @@
     </div>
 
 	<h2>Model Equations and Boundary Conditions</h2>
-	solves shallow water equations...
+	Shallow water equations on a rotating sphere:
+	\[\begin{align} 
+	\frac{\partial u}{\partial t} 
+	+\frac{u}{a\cos\phi}\frac{\partial u}{\partial \lambda} 
+	+\frac{v}{a}\frac{\partial u}{\partial \phi} 
+	-\left(f+\frac{u\tan\phi}{a}\right)v &= 
+	-\frac{g}{a\cos\phi}\frac{\partial h}{\partial \lambda}, \\[6pt] 
+	\frac{\partial v}{\partial t} 
+	+\frac{u}{a\cos\phi}\frac{\partial v}{\partial \lambda} 
+	+\frac{v}{a}\frac{\partial v}{\partial \phi} 
+	+\left(f+\frac{u\tan\phi}{a}\right)u &= 
+	-\frac{g}{a}\frac{\partial h}{\partial \phi}, \\[6pt] 
+	\frac{\partial h}{\partial t} 
+	+\frac{1}{a\cos\phi}\frac{\partial (hu)}{\partial\lambda} 
+	+\frac{1}{a\cos\phi}\frac{\partial (hv\cos\phi)}{\partial\phi} &= 0 
+	\end{align}\]
+
+	where \(f=2\Omega \text{sin}\phi\) and \(\lambda\) and \(\phi\) 
+	are longitude and latitude, respectively.
 
 	<h2>Numerical Methods</h2>
-	using numerical methods...
+	All fields are written in terms of spherical harmonics.  For a field \(q\):
+	\[ q(\lambda,\mu) = \sum_{\ell=0}^{N} \sum_{m=-\ell}^{\ell} q_{\ell m}\, P_{\ell}^{m}(\mu)\, e^{im\lambda} \] with \[ \mu = \sin\phi \]
+	The \(P_l^m\) are the associated Legendre polynomials.  A triangular truncation (default T42) is used: \(|m| \le \ell \le N\).  The fields are
+	transformed from physical into spectral space using FFT and Gaussian quadrature to find the coefficients
+	\[ q_{\ell m} = \int_{-1}^{1} \int_{0}^{2\pi} q(\lambda,\mu)\, P_\ell^m(\mu)\, e^{-im\lambda} \,d\lambda\,d\mu. \]
+	and each harmonic is stepped forward in time. The model decomposes the depth into a mean and deviation, \(h=H+\eta\).
+	The mean component (terms proportional to \(H\)) is stepped forward with an
+	implicit-in-time scheme to control the gravity waves. Once the spectral
+	harmonics are updated, they are transformed back to physical space.  
+	Non-linear terms are multiplied in physical space before the forward 
+	transform.  A \(4^{\text{th}}\) order hyper-diffusion (\(\propto\nabla^4\)) 
+	is used to control small scale noise.
 
 </body>
 </html>
