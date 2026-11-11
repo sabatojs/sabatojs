@@ -24,13 +24,23 @@
     </div>
 
 	<h2>Model Equations and Boundary Conditions</h2>
-	<h3>Dimensional</h3>
-	\[ \frac{\partial \zeta}{\partial t} + J(\psi,\zeta) = g\,\alpha\,\frac{\partial T}{\partial x} + \nu\,\nabla^2\zeta, \] \[ \frac{\partial T}{\partial t} + J(\psi,T) = \kappa\nabla^2 T, \] \[ \zeta = \nabla^2 \psi. \]
-	<h3>Non-Dimensional</h3>
+	The Boussinesq equations in a square x-z domain are nondimensionalized with the velocity scaled by the free-fall speed, \(U=\sqrt{gH\alpha\Delta T}\)
+<!--	\[ \frac{\partial \zeta}{\partial t} + J(\psi,\zeta) = g\,\alpha\,\frac{\partial T}{\partial x} + \nu\,\nabla^2\zeta, \] \[ \frac{\partial T}{\partial t} + J(\psi,T) = \kappa\nabla^2 T, \] \[ \zeta = \nabla^2 \psi. \]
+	<h3>Non-Dimensional</h3> -->
 	\[ \frac{\partial \zeta}{\partial t} + J(\psi,\zeta) = \frac{\partial T}{\partial x} + \sqrt{\frac{Pr}{Ra}}\,\nabla^2\zeta, \] \[ \frac{\partial T}{\partial t} + J(\psi,T) = \frac{1}{\sqrt{RaPr}}\nabla^2 T, \] \[ \zeta = \nabla^2 \psi. \]
 	\[Ra = \frac{g\alpha\Delta TL^3}{\nu\kappa}\qquad Pr = \frac{\nu}{\kappa}\]
+	The Laplacian is \(\nabla^2=\frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial z^2}\). The boundary conditions are no material or heat flow, or 
+	\[\psi=0\qquad z=0,H \text{ and } x=0,H\]
+	\[\frac{\partial T}{\partial x}=0 \qquad x=0,H\]
+	\[\frac{\partial T}{\partial z}=0 \qquad z=0,H\]
 	<h2>Numerical Methods</h2>
-	using numerical methods...
+        <h3>Operator Splitting</h3>
+        Vorticity and temperature are stepped forward separately the advection and diffusion terms.
+                Diffusion terms are calculated using the Crank-Nicholson, implicit in time method.
+                Vorticity and temperature advection are calculated using the Arakawa Jacobian. A leap-frog in time
+        scheme is used, including a Robert filter to control the leap-frog computational mode.  The buoyancy term is calculated using a second order finite difference and is included with the Jacobian term in the leapfrog time stepping.
+                Once the vorticity is updated, it is inverted for the stream function by FFT/IFFT.
+        
 
 </body>
 </html>
