@@ -53,23 +53,20 @@
 
 	<h3>Operator Splitting</h3>
 	PV and surface/tropopause temperatures are calculated separately for each term.
-	<ul>
-		<li>PV and temperature advection is calculated using the Arakawa Jacobian. A leap-frog in time 
-	scheme is used, including a Robert filter to control the leap-frog computational mode.</li>
-
-		<li>PV is inverted for the stream function by FFT (sine/cosine-series in x, 
+	PV and temperature advection is calculated using the Arakawa Jacobian. A leap-frog in time 
+	scheme is used, including a Robert filter to control the leap-frog computational mode. 
+	PV is inverted for the stream function by FFT (sine/cosine-series in x, 
 			sine-series in y) and solving
 	\[\widehat{q}_{kl}= -(k^2+l^2)\widehat{\psi}_{kl} + \frac{f^2}{N^2}\frac{{d^2}\widehat{\psi}_{kl} }{d z^2}\]
 	\[\widehat{\theta}_{kl}=\frac{d\widehat{\psi}_{kl}}{dz} \qquad z=0,H\]
 
 	Using a finite difference approximation, the resulting tridiagonal system in z is solved for each Fourier mode.  The real stream 
-	function \(\psi(x,y,z)\)is then found by IFFT of \(\widehat{\psi}(z)_{kl}\). The PV source/sink terms, and the surface/tropopause heating terms are calculated along with the 
-	advection terms.</li>
-		<li>Numerical diffusion is calculated using the Crank-Nicholson, implicit in time method</li>
+	function \(\psi(x,y,z)\) is then found by IFFT of \(\widehat{\psi}(z)_{kl}\). The PV source/sink terms, and the surface/tropopause heating terms are calculated along with the 
+	advection terms.  Numerical diffusion is calculated using the Crank-Nicholson, implicit in time method.
 <!--
 		 \[ f(x,y) = \sum_{m=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \widehat{f}_{mn}\, e^{i(k_m x + l_n y)} \]
 \[ f(x,y) = \sum_{m=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \left[ A_{mn}\cos\!\left(k_m x + l_n y\right) + B_{mn}\sin\!\left(k_m x + l_n y\right) \right] \]-->
-	</ul> 
+
 
 </body>
 </html>
